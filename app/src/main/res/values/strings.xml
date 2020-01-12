@@ -7,4 +7,6 @@
     <string name="notification_channel_name_news">News Channel</string>
     <string name="notification_channel_des_news">Show The Weather Status At Day</string>
     <string name="notification_channel_id_news">dfgs1df3s5df13</string>
+    <string name="explore">Explore</string>
+    <string name="splash_description">Weather Application To Show The Weather Status Depends on City Name Click Explore To See More Features</string>
 </resources>
