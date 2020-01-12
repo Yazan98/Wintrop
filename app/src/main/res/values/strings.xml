@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Wintrop</string>
+    <string name="error_name">UnExpected Error</string>
+    <string name="notification_channel_name">Subscribtion Channel</string>
+    <string name="notification_channel_des">This Channel  to show the Subscribtions Offers</string>
+    <string name="notification_channel_id">dlskfgns6df6535158dfg3d5fg</string>
+    <string name="notification_channel_name_news">News Channel</string>
+    <string name="notification_channel_des_news">Show The Weather Status At Day</string>
+    <string name="notification_channel_id_news">dfgs1df3s5df13</string>
+</resources>
