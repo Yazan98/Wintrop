@@ -1,7 +1,9 @@
 package com.yazan98.wintrop.client
 
 import android.content.Context
+import com.yazan98.wintrop.data.repository.JordanRepository
 import com.yazan98.wintrop.domain.ApplicationConsts
+import com.yazan98.wintrop.domain.logic.MainViewModel
 import io.vortex.android.keys.ImageLoader
 import io.vortex.android.keys.LoggerType
 import io.vortex.android.models.ui.VortexNotificationDetails
@@ -14,6 +16,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -41,6 +45,7 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
         }
 
         startKoin {
+            androidLogger()
             androidContext(this@WintropApplication)
             modules(applicationModules)
         }
@@ -81,7 +86,8 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
     }
 
     private val applicationModules = module {
-
+        viewModel { MainViewModel() }
+        single { JordanRepository() }
     }
 
 }

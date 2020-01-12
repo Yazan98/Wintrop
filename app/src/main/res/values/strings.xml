@@ -9,4 +9,6 @@
     <string name="notification_channel_id_news">dfgs1df3s5df13</string>
     <string name="explore">Explore</string>
     <string name="splash_description">Weather Application To Show The Weather Status Depends on City Name Click Explore To See More Features</string>
+    <string name="enter_city_name">Enter City Name</string>
+    <string name="empty_text" />
 </resources>
