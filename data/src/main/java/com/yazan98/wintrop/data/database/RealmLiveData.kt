@@ -8,6 +8,7 @@ import javax.inject.Inject
 
 
 fun <T : RealmModel> RealmResults<T>.asLiveData() = RealmLiveData<T>(this)
+
 class RealmLiveData<T : RealmModel> @Inject constructor(private val results: RealmResults<T>) : MutableLiveData<RealmResults<T>>() {
 
     private val listener: RealmChangeListener<RealmResults<T>> =

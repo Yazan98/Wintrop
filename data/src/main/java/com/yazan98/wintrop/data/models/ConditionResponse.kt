@@ -17,7 +17,44 @@ data class ConditionResponse(
     val astronomy: List<WeatherTime>,
     val hourly: List<WeatherHour>,
     var weatherCode: String = ""
-): Parcelable
+): Parcelable {
+
+    private constructor(builder: Builder) : this(
+        tempFe = builder.tempFe,
+        windDegree = builder.windDegree,
+        windSpeedPerHours = builder.windSpeedPerHours,
+        description = builder.description,
+        hourly = builder.hourly,
+        astronomy = builder.astronomy
+    )
+
+
+    companion object {
+        inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
+    }
+
+    class Builder {
+        var tempFe: String = ""
+        var windSpeedPerHours: String = ""
+        var windDegree: String = ""
+        var cityName: String = ""
+        var description: List<WeatherDescription> = arrayListOf(WeatherDescription(value = cityName))
+        var hourly: List<WeatherHour> = arrayListOf()
+        var astronomy: List<WeatherTime> = arrayListOf()
+
+
+        fun build() = ConditionResponse(
+            tempFe = tempFe,
+            windDegree = windDegree,
+            windSpeedPerHours = windSpeedPerHours,
+            description = description,
+            hourly = hourly,
+            astronomy = astronomy
+        )
+
+    }
+
+}
 
 @Parcelize
 data class WeatherDescription(
