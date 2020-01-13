@@ -22,21 +22,23 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
 
     override suspend fun reduce(newAction: MainAction) {
         withContext(Dispatchers.IO) {
-            when (newAction) {
-                is MainAction.GetWeatherInfoByCityName -> {
-                    newAction.get()?.let {
-                        getCityByName(it)
+            if(getLoadingStateHandler().value == null) {
+                when (newAction) {
+                    is MainAction.GetWeatherInfoByCityName -> {
+                        newAction.get()?.let {
+                            getCityByName(it)
+                        }
                     }
-                }
-                else -> {
+                    else -> {
 
+                    }
                 }
             }
         }
     }
 
     private suspend fun getCityByName(name: String) {
-        // At this case Amman Just Herr i will handle just amman process
+        // At this case Amman Just Here i will handle just amman process
         withContext(Dispatchers.IO) {
             acceptLoadingState(true)
             addRxRequest(jordanRepository.getAmmanStatus().subscribe({
@@ -55,6 +57,13 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
                     }
                 }
             }))
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        GlobalScope.launch {
+            destroyReducer()
         }
     }
 

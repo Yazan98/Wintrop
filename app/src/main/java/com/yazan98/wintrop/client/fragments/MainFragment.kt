@@ -7,12 +7,15 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.yazan98.wintrop.client.R
+import com.yazan98.wintrop.client.adapters.DaysAdapter
+import com.yazan98.wintrop.client.screens.ImageChooser
+import com.yazan98.wintrop.data.models.Weather
 import com.yazan98.wintrop.data.models.WeatherResponse
 import com.yazan98.wintrop.domain.action.MainAction
 import com.yazan98.wintrop.domain.logic.MainViewModel
 import com.yazan98.wintrop.domain.state.MainState
-import io.vortex.android.ui.fragment.VortexBaseFragment
 import io.vortex.android.ui.fragment.VortexFragment
 import io.vortex.android.utils.ui.hideView
 import io.vortex.android.utils.ui.showView
@@ -22,19 +25,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 import javax.inject.Inject
 
 class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction, MainViewModel>() {
 
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
-
-    override fun getLayoutRes(): Int {
-        return R.layout.fragment_main
-    }
-
-    override suspend fun getController(): MainViewModel {
-        return viewModel
-    }
 
     override fun initScreen(view: View) {
         MainToolbar?.apply {
@@ -55,6 +51,14 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
             getController().reduce(MainAction.GetWeatherInfoByCityName("Amman"))
         }
 
+    }
+
+    override fun getLayoutRes(): Int {
+        return R.layout.fragment_main
+    }
+
+    override suspend fun getController(): MainViewModel {
+        return viewModel
     }
 
     private suspend fun subscribeObservers() {
@@ -106,11 +110,25 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
              */
             MainTitle?.let { it.text = "${response.data.request[0].type}, ${response.data.request[0].query}" }
             response.data.currentConditions[0].let { condition ->
-                MainTitleTempF?.let { it.text = condition.tempFe }
+                MainTitleTempF?.let { it.text = "${condition.tempFe}${getString(R.string.present)}" }
                 CardDescription?.let { it.text = condition.description[0].value }
                 SpeedWindsView?.let { it.text = "${getString(R.string.speed_per_hour)} ${condition.windSpeedPerHours}" }
                 WindDegree?.let { it.text = "${getString(R.string.wind_degree)} ${condition.windDegree}" }
+                CardImage?.let { it.setImageResource(ImageChooser.getImageByStatus(condition.description[0].value)) }
+            }
 
+            displayComingDays(response.data.weather)
+        }
+    }
+
+    private suspend fun displayComingDays(data: List<Weather>) {
+        withContext(Dispatchers.Main) {
+            activity?.let {
+                MainRecycler?.apply {
+                    this.layoutManager = LinearLayoutManager(it , LinearLayoutManager.HORIZONTAL , false)
+                    this.adapter = DaysAdapter(data)
+                    (this.adapter as DaysAdapter).context = it
+                }
             }
         }
     }

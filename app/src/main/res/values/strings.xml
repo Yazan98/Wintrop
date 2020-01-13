@@ -17,4 +17,5 @@
     <string name="next_months">Next Months</string>
     <string name="speed_per_hour">"Wind Speed Per Hour : "</string>
     <string name="wind_degree">Wind Degree :</string>
+    <string name="present">°</string>
 </resources>

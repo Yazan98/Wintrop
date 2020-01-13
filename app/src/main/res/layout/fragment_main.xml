@@ -90,7 +90,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/_40sdp"
+                            android:textSize="@dimen/_50sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -108,8 +108,8 @@
 
                         <ImageView
                             android:layout_width="@dimen/_70sdp"
+                            android:id="@+id/CardImage"
                             android:layout_height="@dimen/_70sdp"
-                            android:src="@drawable/ic_shower_rain"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
 
