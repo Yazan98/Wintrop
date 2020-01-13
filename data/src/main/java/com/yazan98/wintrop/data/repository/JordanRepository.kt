@@ -16,12 +16,4 @@ class JordanRepository @Inject constructor() : WeatherRepository<JordanApi>() {
         return getService().getWeatherStatusByCityName(query = "Amman")
     }
 
-    suspend fun getIrbidStatus(): Observable<WeatherResponse> {
-        return getService().getWeatherStatusByCityName(query = "Irbid")
-    }
-
-    suspend fun getAqabaStatus(): Observable<WeatherResponse> {
-        return getService().getWeatherStatusByCityName(query = "Aqaba")
-    }
-
 }

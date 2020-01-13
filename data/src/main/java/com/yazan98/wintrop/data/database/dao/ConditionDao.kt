@@ -25,7 +25,8 @@ class ConditionDao(private val database: Realm) : DatabaseOperations<ConditionEn
 
     override suspend fun getConditionByCityName(cityName: String): LiveData<RealmResults<ConditionEntity>> {
         return withContext(Dispatchers.IO) {
-            database.where(ConditionEntity::class.java).equalTo("city_name", cityName)
+            database.where(ConditionEntity::class.java)
+                .equalTo("city_name", cityName)
                 .findAllAsync().asLiveData()
         }
     }
@@ -33,7 +34,8 @@ class ConditionDao(private val database: Realm) : DatabaseOperations<ConditionEn
     override suspend fun deleteConditionById(id: String) {
         withContext(Dispatchers.IO) {
             database.executeTransactionAsync {
-                val result = it.where(ConditionEntity::class.java).equalTo("id", id).findFirst()
+                val result = it.where(ConditionEntity::class.java)
+                    .equalTo("id", id).findFirst()
                 result?.deleteFromRealm()
             }
         }

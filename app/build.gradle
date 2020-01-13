@@ -118,7 +118,7 @@ android {
         } else {
             profileName = "-Release Version"
         }
-        def appName = "Culttrip Client ${profileName}"
+        def appName = "Wintrop ${profileName}"
         variant.outputs.all { output ->
             def newApkName
             newApkName = "${appName}-${rootProject.ext.ApplicationBuildType} -${versionName}.apk"

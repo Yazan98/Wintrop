@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
 
     override suspend fun reduce(newAction: MainAction) {
         withContext(Dispatchers.IO) {
-            if(getLoadingStateHandler().value == null) {
+            if(getStateHandler().value == null || getStateHandler().value is MainState.ErrorState) {
                 when (newAction) {
                     is MainAction.ClearDatabase -> clearDatabase()
                     is MainAction.GetWeatherInfoByCityName -> {

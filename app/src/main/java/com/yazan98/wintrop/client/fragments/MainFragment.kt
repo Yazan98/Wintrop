@@ -3,10 +3,12 @@ package com.yazan98.wintrop.client.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yazan98.wintrop.client.R
 import com.yazan98.wintrop.client.adapters.DaysAdapter
 import com.yazan98.wintrop.client.adapters.MonthsAdapter
@@ -90,12 +92,18 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
             when (status) {
                 true -> {
                     MainLoading?.showView()
+                    ErrorView?.hideView()
                     Container?.hideView()
                 }
 
                 false -> {
                     MainLoading?.hideView()
-                    Container?.showView()
+                   getController().getStateHandler().value?.let {
+                       if (it !is MainState.ErrorState) {
+                           Container?.showView()
+                           ErrorView?.hideView()
+                       }
+                   }
                 }
             }
         }
@@ -158,6 +166,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
         withContext(Dispatchers.Main) {
             activity?.let {
                 messageController.showSnackbar(it, message)
+                showErrorView(message)
             }
         }
     }
@@ -191,6 +200,23 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
     override fun onDestroy() {
         settingsDialog.destroyListener()
         super.onDestroy()
+    }
+
+    private suspend fun showErrorView(message: String) {
+        withContext(Dispatchers.Main) {
+            ErrorView?.showView()
+            ErrorView.findViewById<TextView>(R.id.ErrorMessage)?.let {
+                it.text = message
+            }
+
+            ErrorView.findViewById<FloatingActionButton>(R.id.ReloadError)?.apply {
+                this.setOnClickListener {
+                    GlobalScope.launch {
+                        getController().reduce(MainAction.GetWeatherInfoByCityName("Amman"))
+                    }
+                }
+            }
+        }
     }
 
 }

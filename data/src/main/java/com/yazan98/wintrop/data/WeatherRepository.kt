@@ -19,11 +19,8 @@ abstract class WeatherRepository<Api> : VortexRepository<Api>() {
         return BuildConfig.BASE_URL
     }
 
-    protected fun getApiKey(): String {
-        return BuildConfig.API_KEY
-    }
-
     override fun getRequestDetails(): VortexRequestDetailsProvider {
+        // This is for Vortex Retrofit Interceptor and no need to implement the Interceptor at this Application
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

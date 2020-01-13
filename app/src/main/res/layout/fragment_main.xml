@@ -183,6 +183,11 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <include
+        android:id="@+id/ErrorView"
+        android:visibility="gone"
+        layout="@layout/error_view"/>
+
     <ProgressBar
         android:id="@+id/MainLoading"
         android:layout_width="wrap_content"

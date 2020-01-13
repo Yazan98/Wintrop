@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DestinationViewModel @Inject constructor() :
-    VortexViewModel<DestinationState, DestinationAction>() {
+class DestinationViewModel @Inject constructor() : VortexViewModel<DestinationState, DestinationAction>() {
 
     private val repository: JordanRepository by lazy {
         RepositoriesComponentImpl().getJordanRepository()
