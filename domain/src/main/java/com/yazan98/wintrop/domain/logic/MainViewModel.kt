@@ -1,5 +1,7 @@
 package com.yazan98.wintrop.domain.logic
 
+import com.yazan98.wintrop.data.database.dao.ConditionDao
+import com.yazan98.wintrop.data.di.DatabaseComponentImpl
 import com.yazan98.wintrop.data.di.RepositoriesComponentImpl
 import com.yazan98.wintrop.domain.action.MainAction
 import com.yazan98.wintrop.domain.state.MainState
@@ -16,6 +18,10 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
         RepositoriesComponentImpl().getJordanRepository()
     }
 
+    private val databaseManager: ConditionDao by lazy {
+        DatabaseComponentImpl().getConditionDao()
+    }
+
     override suspend fun getInitialState(): MainState {
         return MainState.EmptyState()
     }
@@ -24,13 +30,11 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
         withContext(Dispatchers.IO) {
             if(getLoadingStateHandler().value == null) {
                 when (newAction) {
+                    is MainAction.ClearDatabase -> clearDatabase()
                     is MainAction.GetWeatherInfoByCityName -> {
                         newAction.get()?.let {
                             getCityByName(it)
                         }
-                    }
-                    else -> {
-
                     }
                 }
             }
@@ -57,6 +61,12 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState , MainActi
                     }
                 }
             }))
+        }
+    }
+
+    private suspend fun clearDatabase() {
+        withContext(Dispatchers.IO) {
+            databaseManager.clearConditions()
         }
     }
 

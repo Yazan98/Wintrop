@@ -1,13 +1,14 @@
 package com.yazan98.wintrop.client
 
-import android.content.Context
+import com.yazan98.wintrop.client.utils.Utils
 import com.yazan98.wintrop.data.repository.JordanRepository
-import com.yazan98.wintrop.domain.ApplicationConsts
+import com.yazan98.wintrop.domain.logic.DestinationViewModel
 import com.yazan98.wintrop.domain.logic.MainViewModel
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.vortex.android.keys.ImageLoader
 import io.vortex.android.keys.LoggerType
 import io.vortex.android.models.ui.VortexNotificationDetails
-import io.vortex.android.prefs.VortexPrefsConfig
 import io.vortex.android.ui.VortexMessageDelegation
 import io.vortex.android.utils.VortexApplication
 import io.vortex.android.utils.VortexConfiguration
@@ -20,6 +21,11 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
+
 
 class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler {
 
@@ -31,16 +37,27 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
         super.onCreate()
 
         GlobalScope.launch {
-            VortexConfiguration
-                    .registerApplicationClass(this@WintropApplication)
-                    .registerApplicationLogger(LoggerType.TIMBER)
-                    .registerApplicationState(BuildConfig.DEBUG)
-                    .registerCompatVector()
-                    .registerExceptionHandler(this@WintropApplication)
-                    .registerImageLoader(ImageLoader.FRESCO)
-                    .registerStrictMode()
+            try {
+                applicationContext?.let {
+                    Realm.init(it)
+                    Realm.getInstance(setupRealmConfiguration())
+                }
+            } catch (ex: Exception) {
+                Timber.e("Realm Error : ${ex.message}")
+                handleDatabaseError(ex.message)
+            }
+        }
 
-            VortexPrefsConfig.prefs = getSharedPreferences(ApplicationConsts.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        GlobalScope.launch {
+            VortexConfiguration
+                .registerApplicationClass(this@WintropApplication)
+                .registerApplicationLogger(LoggerType.TIMBER)
+                .registerApplicationState(BuildConfig.DEBUG)
+                .registerCompatVector()
+                .registerExceptionHandler(this@WintropApplication)
+                .registerImageLoader(ImageLoader.FRESCO)
+                .registerStrictMode()
+
             registerNotificationChannels()
         }
 
@@ -52,22 +69,35 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
 
     }
 
+    private suspend fun setupRealmConfiguration() = suspendCoroutine<RealmConfiguration> {
+        try {
+            val config = RealmConfiguration.Builder()
+                .name(Utils.DATABASE_NAME)
+                .schemaVersion(Utils.DATABASE_VERSION)
+                .inMemory()
+                .build()
+            it.resume(config)
+        } catch (ex: Exception) {
+            it.resumeWithException(ex)
+        }
+    }
+
     private suspend fun registerNotificationChannels() {
         withContext(Dispatchers.IO) {
             applicationContext?.let {
                 notificationsController.createMultiNotificationChannels(
-                        arrayListOf(
-                                VortexNotificationDetails(
-                                        getString(R.string.notification_channel_name),
-                                        getString(R.string.notification_channel_des),
-                                        getString(R.string.notification_channel_id)
-                                ),
-                                VortexNotificationDetails(
-                                        getString(R.string.notification_channel_name_news),
-                                        getString(R.string.notification_channel_des_news),
-                                        getString(R.string.notification_channel_id_news)
-                                )
-                        ), it
+                    arrayListOf(
+                        VortexNotificationDetails(
+                            getString(R.string.notification_channel_name),
+                            getString(R.string.notification_channel_des),
+                            getString(R.string.notification_channel_id)
+                        ),
+                        VortexNotificationDetails(
+                            getString(R.string.notification_channel_name_news),
+                            getString(R.string.notification_channel_des_news),
+                            getString(R.string.notification_channel_id_news)
+                        )
+                    ), it
                 )
             }
         }
@@ -75,10 +105,14 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
 
     override fun uncaughtException(t: Thread, e: Throwable) {
         GlobalScope.launch {
-            e?.let {
+            e.let {
                 it.message?.apply {
                     applicationContext?.let {
-                        messageController.showAlertDialog(it, it.getString(R.string.error_name), this)
+                        messageController.showAlertDialog(
+                            it,
+                            it.getString(R.string.error_name),
+                            this
+                        )
                     }
                 }
             }
@@ -87,7 +121,18 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
 
     private val applicationModules = module {
         viewModel { MainViewModel() }
+        viewModel { DestinationViewModel() }
         single { JordanRepository() }
+    }
+
+    private suspend fun handleDatabaseError(message: String?) {
+        withContext(Dispatchers.Main) {
+            message?.let { result ->
+                applicationContext?.let {
+                    messageController.showLongMessage(result, it)
+                }
+            }
+        }
     }
 
 }

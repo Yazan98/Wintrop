@@ -203,8 +203,6 @@ private void applicationConfiguration(configuration) {
     def ApplicationConfiguration = rootProject.ext.ApplicationConfiguration
     configuration.implementation ApplicationConfiguration.Timber
     configuration.implementation ApplicationConfiguration.MultiDexApp
-    configuration.implementation ApplicationConfiguration.LeakCanaryAndroid
-    configuration.implementation ApplicationConfiguration.LeakCanary
     configuration.implementation ApplicationConfiguration.KotlinJdk
 }
 

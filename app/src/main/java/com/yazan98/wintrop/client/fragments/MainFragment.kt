@@ -1,12 +1,11 @@
 package com.yazan98.wintrop.client.fragments
 
 import android.annotation.SuppressLint
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yazan98.wintrop.client.R
 import com.yazan98.wintrop.client.adapters.DaysAdapter
@@ -27,24 +26,26 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.time.Month
 import javax.inject.Inject
 
-class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction, MainViewModel>() {
+class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction, MainViewModel>(),
+    SettingsFragment.SettingsClick {
 
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
+    private val settingsDialog: SettingsFragment by lazy {
+        SettingsFragment()
+    }
 
     override fun initScreen(view: View) {
         MainToolbar?.apply {
             activity?.let {
                 (it as AppCompatActivity).setSupportActionBar(this)
-                it.supportActionBar?.title = getString(R.string.empty_text)
+                it.supportActionBar?.title = getString(R.string.default_title)
                 this.setNavigationIcon(R.drawable.ic_menu)
-                setHasOptionsMenu(true)
             }
 
             this.setNavigationOnClickListener {
-
+                showSettingsFragment()
             }
         }
 
@@ -53,6 +54,11 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
             getController().reduce(MainAction.GetWeatherInfoByCityName("Amman"))
         }
 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settingsDialog.attachListener(this)
     }
 
     override fun getLayoutRes(): Int {
@@ -98,7 +104,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
     override suspend fun onStateChanged(newState: MainState) {
         withContext(Dispatchers.IO) {
             when (newState) {
-                is MainState.ErrorState -> showError(newState.get())
+                is MainState.ErrorState -> showMessage(newState.get())
                 is MainState.SuccessResponse -> loadResponse(newState.get())
             }
         }
@@ -148,7 +154,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
         }
     }
 
-    private suspend fun showError(message: String) {
+    private suspend fun showMessage(message: String) {
         withContext(Dispatchers.Main) {
             activity?.let {
                 messageController.showSnackbar(it, message)
@@ -156,17 +162,35 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
+    private fun showSettingsFragment() {
+        activity?.let { it ->
+            it.supportFragmentManager.let {
+                settingsDialog.show(it, "SettingsFragment")
+            }
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.SearchButtonMain -> {
-                true
+    override fun onOptionChoose(index: Int) {
+        when (index) {
+            1 -> startDestinationFragment("Irbid")
+            2 -> startDestinationFragment("Aqaba")
+            3 -> GlobalScope.launch {
+                getController().reduce(MainAction.ClearDatabase())
+                showMessage(getString(R.string.clear_database))
             }
-            else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun startDestinationFragment(name: String) {
+        val data = Bundle()
+        data.putString("Name", name)
+        // Use Directions not the direct id but this is just a demo
+        findNavController().navigate(R.id.action_mainFragment_to_destinationFragment , data)
+    }
+
+    override fun onDestroy() {
+        settingsDialog.destroyListener()
+        super.onDestroy()
     }
 
 }

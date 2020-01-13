@@ -19,4 +19,10 @@
     <string name="wind_degree">Wind Degree :</string>
     <string name="present">°</string>
     <string name="month_name">Month Name</string>
+    <string name="settings">Settings</string>
+    <string name="default_title" />
+    <string name="irbid_status">Irbid Status</string>
+    <string name="aqaba_status">Aqaba Status</string>
+    <string name="clear_local">Clear Offline State</string>
+    <string name="clear_database">Local Conditions Deleted</string>
 </resources>

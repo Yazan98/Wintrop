@@ -28,4 +28,7 @@ object Utils {
         R.drawable.bg_item_8
     )
 
+    const val DATABASE_VERSION = 2L
+    const val DATABASE_NAME = "database.realm"
+
 }

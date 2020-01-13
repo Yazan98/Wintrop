@@ -8,7 +8,22 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        tools:layout="@layout/fragment_main"
         android:name="com.yazan98.wintrop.client.fragments.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_mainFragment_to_destinationFragment"
+            app:destination="@id/destinationFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/destinationFragment"
+        android:name="com.yazan98.wintrop.client.fragments.DestinationFragment"
+        android:label="DestinationFragment"
+        tools:layout="@layout/fragment_destination" />
 </navigation>

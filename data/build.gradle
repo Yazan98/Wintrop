@@ -1,8 +1,11 @@
+apply plugin: "${rootProject.ext.RealmPlugin}"
+
 dependencies { configuration ->
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     rxJavaConfiguration(configuration)
     retrofitConfiguration(configuration)
     vortexConfiguration(configuration)
+    lifeCycleConfiguration(configuration)
 }
 
 private void rxJavaConfiguration(configuration) {

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class JordanRepository @Inject constructor() : WeatherRepository<JordanApi>() {
 
-    override suspend fun getService(): JordanApi {
+    public override suspend fun getService(): JordanApi {
         return serviceProvider.create(JordanApi::class.java)
     }
 
