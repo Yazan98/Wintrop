@@ -1,5 +1,7 @@
 package com.yazan98.wintrop.data
 
+import com.yazan98.wintrop.data.di.RepositoryComponent
+import com.yazan98.wintrop.data.di.RepositoryComponentImpl
 import io.vortex.android.data.VortexRepository
 import io.vortex.android.models.VortexRequestDetailsProvider
 

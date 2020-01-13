@@ -1,7 +1,6 @@
-package com.yazan98.wintrop.data
+package com.yazan98.wintrop.data.di
 
-import io.vortex.android.models.VortexRequestDetails
-import io.vortex.android.models.VortexRequestDetailsProvider
+import com.yazan98.wintrop.data.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -11,4 +11,10 @@
     <string name="splash_description">Weather Application To Show The Weather Status Depends on City Name Click Explore To See More Features</string>
     <string name="enter_city_name">Enter City Name</string>
     <string name="empty_text" />
+    <string name="search">Search</string>
+    <string name="current_time">Current Time</string>
+    <string name="next_days">Next Days</string>
+    <string name="next_months">Next Months</string>
+    <string name="speed_per_hour">"Wind Speed Per Hour : "</string>
+    <string name="wind_degree">Wind Degree :</string>
 </resources>

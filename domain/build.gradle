@@ -2,6 +2,7 @@ dependencies { configuration ->
     implementation project(":data")
     lifeCycleConfiguration(configuration)
     vortexConfiguration(configuration)
+    koinConfiguration(configuration)
 }
 
 private void vortexConfiguration(configuration) {
@@ -10,4 +11,11 @@ private void vortexConfiguration(configuration) {
     configuration.implementation VortexConfiguration.VortexLocal
     configuration.implementation VortexConfiguration.VortexData
     configuration.implementation VortexConfiguration.VortexPrefs
+}
+
+private void koinConfiguration(configuration) {
+    def KoinConfiguration = rootProject.ext.KoinConfiguration
+    configuration.implementation KoinConfiguration.KoinAndroid
+    configuration.implementation KoinConfiguration.KoinLifecycle
+    configuration.implementation KoinConfiguration.KoinViewModel
 }
