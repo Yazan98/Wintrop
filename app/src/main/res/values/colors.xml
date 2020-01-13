@@ -6,4 +6,13 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="gray">#EAEAEA</color>
+
+    <color name="item_1">#E040FB</color>
+    <color name="item_2">#FF4081</color>
+    <color name="item_3">#2979FF</color>
+    <color name="item_4">#64FFDA</color>
+    <color name="item_5">#00B0FF</color>
+    <color name="item_6">#64FFDA</color>
+    <color name="item_7">#FF8A65</color>
+    <color name="item_8">#EC407A</color>
 </resources>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.yazan98.wintrop.client.R
 import com.yazan98.wintrop.client.screens.ImageChooser
@@ -13,6 +14,17 @@ import kotlinx.android.synthetic.main.row_day.view.*
 import javax.inject.Inject
 
 class DaysAdapter @Inject constructor(private val data: List<Weather>) : VortexBaseAdapter<DaysAdapter.ViewHolder>() {
+
+    private val colors = arrayListOf<Int>(
+        R.drawable.bg_item_1,
+        R.drawable.bg_item_2,
+        R.drawable.bg_item_3,
+        R.drawable.bg_item_4,
+        R.drawable.bg_item_5,
+        R.drawable.bg_item_6,
+        R.drawable.bg_item_7,
+        R.drawable.bg_item_8
+    )
 
     override fun getItemCount(): Int {
         return data.size
@@ -28,6 +40,10 @@ class DaysAdapter @Inject constructor(private val data: List<Weather>) : VortexB
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.item?.let {
+            it.setBackgroundResource(colors[position.rem(colors.size - 1)])
+        }
+
         data[position].date.let { result ->
             holder.date?.let {
                 it.text = result
@@ -64,6 +80,7 @@ class DaysAdapter @Inject constructor(private val data: List<Weather>) : VortexB
         val temp: TextView? = view.TempItem
         val up: TextView? = view.CardUp
         val down: TextView? = view.CardDown
+        val item: ConstraintLayout? = view.CardViewItem
     }
 
 }

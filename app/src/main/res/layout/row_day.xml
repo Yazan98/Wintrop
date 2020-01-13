@@ -13,7 +13,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/_120sdp"
-            android:background="@drawable/bg_main_card"
+            android:id="@+id/CardViewItem"
             android:layout_height="@dimen/_190sdp">
 
 
@@ -34,7 +34,6 @@
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_shower_rain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Date" />
