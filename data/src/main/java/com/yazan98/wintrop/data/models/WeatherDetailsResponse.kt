@@ -8,7 +8,8 @@ import kotlinx.android.parcel.Parcelize
 data class WeatherDetailsResponse(
     val request: List<WeatherRequest>,
     val weather: List<Weather>,
-    @SerializedName("current_condition") val currentConditions: List<ConditionResponse>
+    @SerializedName("current_condition") val currentConditions: List<ConditionResponse>,
+    @SerializedName("ClimateAverages") val avarage: List<AvarageResponse>
 ) : Parcelable
 
 @Parcelize
@@ -30,3 +31,7 @@ data class WeatherHour(
     val weatherDesc: List<WeatherDescription>
 ) : Parcelable
 
+@Parcelize
+data class AvarageResponse(
+    val month: List<MonthResponse>
+): Parcelable

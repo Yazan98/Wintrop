@@ -7,24 +7,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.yazan98.wintrop.client.R
-import com.yazan98.wintrop.client.screens.ImageChooser
+import com.yazan98.wintrop.client.utils.Utils
+import com.yazan98.wintrop.client.utils.Utils.colors
 import com.yazan98.wintrop.data.models.Weather
 import io.vortex.android.utils.random.VortexBaseAdapter
 import kotlinx.android.synthetic.main.row_day.view.*
 import javax.inject.Inject
 
 class DaysAdapter @Inject constructor(private val data: List<Weather>) : VortexBaseAdapter<DaysAdapter.ViewHolder>() {
-
-    private val colors = arrayListOf<Int>(
-        R.drawable.bg_item_1,
-        R.drawable.bg_item_2,
-        R.drawable.bg_item_3,
-        R.drawable.bg_item_4,
-        R.drawable.bg_item_5,
-        R.drawable.bg_item_6,
-        R.drawable.bg_item_7,
-        R.drawable.bg_item_8
-    )
 
     override fun getItemCount(): Int {
         return data.size
@@ -52,7 +42,7 @@ class DaysAdapter @Inject constructor(private val data: List<Weather>) : VortexB
 
         data[position].hours[0].description[0].value.let {
             println("THe Text : ${it}")
-            holder.image?.setImageResource(ImageChooser.getImageByStatus(it))
+            holder.image?.setImageResource(Utils.getImageByStatus(it))
         }
 
         data[position].hours[0].tempF.let { result ->

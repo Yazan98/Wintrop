@@ -1,9 +1,9 @@
-package com.yazan98.wintrop.client.screens
+package com.yazan98.wintrop.client.utils
 
 import androidx.annotation.DrawableRes
 import com.yazan98.wintrop.client.R
 
-object ImageChooser {
+object Utils {
 
     @DrawableRes
     fun getImageByStatus(status: String): Int {
@@ -16,5 +16,16 @@ object ImageChooser {
             else -> R.drawable.ic_broken_clouds
         }
     }
+
+    val colors = arrayListOf<Int>(
+        R.drawable.bg_item_1,
+        R.drawable.bg_item_2,
+        R.drawable.bg_item_3,
+        R.drawable.bg_item_4,
+        R.drawable.bg_item_5,
+        R.drawable.bg_item_6,
+        R.drawable.bg_item_7,
+        R.drawable.bg_item_8
+    )
 
 }

@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yazan98.wintrop.client.R
 import com.yazan98.wintrop.client.adapters.DaysAdapter
-import com.yazan98.wintrop.client.screens.ImageChooser
+import com.yazan98.wintrop.client.adapters.MonthsAdapter
+import com.yazan98.wintrop.client.utils.Utils
+import com.yazan98.wintrop.data.models.MonthResponse
 import com.yazan98.wintrop.data.models.Weather
 import com.yazan98.wintrop.data.models.WeatherResponse
 import com.yazan98.wintrop.domain.action.MainAction
@@ -25,7 +27,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
+import java.time.Month
 import javax.inject.Inject
 
 class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction, MainViewModel>() {
@@ -114,10 +116,23 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
                 CardDescription?.let { it.text = condition.description[0].value }
                 SpeedWindsView?.let { it.text = "${getString(R.string.speed_per_hour)} ${condition.windSpeedPerHours}" }
                 WindDegree?.let { it.text = "${getString(R.string.wind_degree)} ${condition.windDegree}" }
-                CardImage?.let { it.setImageResource(ImageChooser.getImageByStatus(condition.description[0].value)) }
+                CardImage?.let { it.setImageResource(Utils.getImageByStatus(condition.description[0].value)) }
             }
 
             displayComingDays(response.data.weather)
+            displayComingMonths(response.data.avarage[0].month)
+        }
+    }
+
+    private suspend fun displayComingMonths(data: List<MonthResponse>) {
+        withContext(Dispatchers.Main) {
+            activity?.let {
+                MainMonthRecycler?.apply {
+                    this.layoutManager = LinearLayoutManager(it , LinearLayoutManager.VERTICAL , false)
+                    this.adapter = MonthsAdapter(data)
+                    (this.adapter as MonthsAdapter).context = it
+                }
+            }
         }
     }
 

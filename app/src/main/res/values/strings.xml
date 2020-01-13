@@ -18,4 +18,5 @@
     <string name="speed_per_hour">"Wind Speed Per Hour : "</string>
     <string name="wind_degree">Wind Degree :</string>
     <string name="present">°</string>
+    <string name="month_name">Month Name</string>
 </resources>
