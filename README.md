@@ -1,6 +1,9 @@
 # Wintrop Application
 #### Application Description
 
+![logo](https://user-images.githubusercontent.com/29167110/72382065-6616dc00-3710-11ea-9958-6819483ac26d.png)
+
+
 This Application has Two Screens and One Fragment
 The First Screen is The Splash Screen To Show The User Application Info With Logo
 THe Second Screen is The Main Screen Store All Fragments At One Screen But at this example just one fragment at the main screen
@@ -50,3 +53,12 @@ This Application Built On Vortex Library To Config the Application
 Vortex Link : https://github.com/Vortex-io/Vortex
 Bintray Link : https://bintray.com/yt98/Vortex
 
+## Screenshots
+
+![82535731_550057142389978_78404924341223424_n](https://user-images.githubusercontent.com/29167110/72382085-7038da80-3710-11ea-8f0a-ecfdccf05e99.jpg)
+
+
+![82191080_2437326349931321_2649751945526378496_n](https://user-images.githubusercontent.com/29167110/72382120-8181e700-3710-11ea-8eba-db5eb0c15a31.jpg)
+
+
+![81976736_1002485890123604_1837372754232344576_n](https://user-images.githubusercontent.com/29167110/72382141-8b0b4f00-3710-11ea-9aaf-d367e6f7abd9.jpg)
