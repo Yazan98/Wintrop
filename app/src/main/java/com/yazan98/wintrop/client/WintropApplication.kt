@@ -1,11 +1,8 @@
 package com.yazan98.wintrop.client
 
-import com.yazan98.wintrop.client.utils.Utils
+import com.yazan98.wintrop.data.database.DatabaseManager
 import com.yazan98.wintrop.data.repository.JordanRepository
-import com.yazan98.wintrop.domain.logic.DestinationViewModel
 import com.yazan98.wintrop.domain.logic.MainViewModel
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.vortex.android.keys.ImageLoader
 import io.vortex.android.keys.LoggerType
 import io.vortex.android.models.ui.VortexNotificationDetails
@@ -22,9 +19,6 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import timber.log.Timber
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 
 class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler {
@@ -35,18 +29,6 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
 
     override fun onCreate() {
         super.onCreate()
-
-        GlobalScope.launch {
-            try {
-                applicationContext?.let {
-                    Realm.init(it)
-                    Realm.getInstance(setupRealmConfiguration())
-                }
-            } catch (ex: Exception) {
-                Timber.e("Realm Error : ${ex.message}")
-                handleDatabaseError(ex.message)
-            }
-        }
 
         GlobalScope.launch {
             VortexConfiguration
@@ -61,25 +43,18 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
             registerNotificationChannels()
         }
 
+        GlobalScope.launch {
+           applicationContext?.let {
+               DatabaseManager.initDatabase(it)
+           }
+        }
+
         startKoin {
             androidLogger()
             androidContext(this@WintropApplication)
             modules(applicationModules)
         }
 
-    }
-
-    private suspend fun setupRealmConfiguration() = suspendCoroutine<RealmConfiguration> {
-        try {
-            val config = RealmConfiguration.Builder()
-                .name(Utils.DATABASE_NAME)
-                .schemaVersion(Utils.DATABASE_VERSION)
-                .inMemory()
-                .build()
-            it.resume(config)
-        } catch (ex: Exception) {
-            it.resumeWithException(ex)
-        }
     }
 
     private suspend fun registerNotificationChannels() {
@@ -107,11 +82,11 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
         GlobalScope.launch {
             e.let {
                 it.message?.apply {
+                    Timber.e("THe Un Expected Error is : $this")
                     applicationContext?.let {
-                        messageController.showAlertDialog(
-                            it,
-                            it.getString(R.string.error_name),
-                            this
+                        messageController.showLongMessage(
+                            this,
+                            it
                         )
                     }
                 }
@@ -121,18 +96,7 @@ class WintropApplication : VortexApplication(), Thread.UncaughtExceptionHandler 
 
     private val applicationModules = module {
         viewModel { MainViewModel() }
-        viewModel { DestinationViewModel() }
         single { JordanRepository() }
-    }
-
-    private suspend fun handleDatabaseError(message: String?) {
-        withContext(Dispatchers.Main) {
-            message?.let { result ->
-                applicationContext?.let {
-                    messageController.showLongMessage(result, it)
-                }
-            }
-        }
     }
 
 }

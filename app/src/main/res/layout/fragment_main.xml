@@ -86,7 +86,7 @@
                         android:background="@drawable/bg_main_card">
 
                         <TextView
-                            android:id="@+id/MainTitleTempF"
+                            android:id="@+id/DesTitleF"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
@@ -105,7 +105,7 @@
                             android:textSize="@dimen/_15sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/MainTitleTempF" />
+                            app:layout_constraintTop_toBottomOf="@+id/DesTitleF" />
 
                         <ImageView
                             android:layout_width="@dimen/_70sdp"

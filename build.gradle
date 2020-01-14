@@ -7,8 +7,7 @@ buildscript {
             "FirebasePluginV"    : "4.3.1",
             "KtlintPluginV"      : "2.1.1",
             "FabricPluginV"      : "1.28.1",
-            "NavigationPluginV"  : "2.2.0-rc04",
-            "RealmPluginV"       : "7.0.0-beta-SNAPSHOT"
+            "NavigationPluginV"  : "2.2.0-rc04"
     ]
 
     repositories {
@@ -20,7 +19,6 @@ buildscript {
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
         maven { url "https://dl.bintray.com/yt98/Vortex" }
-        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
     }
 
     dependencies {
@@ -31,7 +29,6 @@ buildscript {
         classpath "org.jmailen.gradle:kotlinter-gradle:${rootProject.ext.PluginsVersions.KtlintPluginV}"
         classpath "io.fabric.tools:gradle:${rootProject.ext.PluginsVersions.FabricPluginV}"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${rootProject.ext.PluginsVersions.NavigationPluginV}"
-        classpath "io.realm:realm-gradle-plugin:${rootProject.ext.PluginsVersions.RealmPluginV}"
     }
 
 }
@@ -175,4 +172,12 @@ void lifeCycleConfiguration(configuration) {
     configuration.implementation LifeCycleConfiguration.LifecycleRuntime
     configuration.implementation LifeCycleConfiguration.LifecycleLiveData
     configuration.implementation LifeCycleConfiguration.LifecycleCommon
+}
+
+void databaseConfiguration(configuration) {
+    def RoomConfiguration = rootProject.ext.RoomConfiguration
+    configuration.implementation RoomConfiguration.RoomRuntime
+    configuration.kapt RoomConfiguration.RoomCompiler
+    configuration.implementation RoomConfiguration.RoomKotlin
+    configuration.implementation RoomConfiguration.RoomRxJava
 }

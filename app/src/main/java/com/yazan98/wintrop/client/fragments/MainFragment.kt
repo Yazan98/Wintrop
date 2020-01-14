@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yazan98.wintrop.client.R
@@ -126,7 +125,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
              */
             MainTitle?.let { it.text = "${response.data.request[0].type}, ${response.data.request[0].query}" }
             response.data.currentConditions[0].let { condition ->
-                MainTitleTempF?.let { it.text = "${condition.tempFe}${getString(R.string.present)}" }
+                DesTitleF?.let { it.text = "${condition.tempFe}${getString(R.string.present)}" }
                 CardDescription?.let { it.text = condition.description[0].value }
                 SpeedWindsView?.let { it.text = "${getString(R.string.speed_per_hour)} ${condition.windSpeedPerHours}" }
                 WindDegree?.let { it.text = "${getString(R.string.wind_degree)} ${condition.windDegree}" }
@@ -180,21 +179,18 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
     }
 
     override fun onOptionChoose(index: Int) {
-        when (index) {
-            1 -> startDestinationFragment("Irbid")
-            2 -> startDestinationFragment("Aqaba")
-            3 -> GlobalScope.launch {
-                getController().reduce(MainAction.ClearDatabase())
-                showMessage(getString(R.string.clear_database))
+        GlobalScope.launch {
+            when (index) {
+                1 -> startNewNameAction("Irbid")
+                2 -> startNewNameAction("Aqaba")
             }
         }
     }
 
-    private fun startDestinationFragment(name: String) {
-        val data = Bundle()
-        data.putString("Name", name)
-        // Use Directions not the direct id but this is just a demo
-        findNavController().navigate(R.id.action_mainFragment_to_destinationFragment , data)
+    private suspend fun startNewNameAction(name: String) {
+        withContext(Dispatchers.IO) {
+            getController().reduce(MainAction.GetWeatherInfoByCityName(name))
+        }
     }
 
     override fun onDestroy() {

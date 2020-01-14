@@ -1,10 +1,10 @@
-apply plugin: "${rootProject.ext.RealmPlugin}"
 
 dependencies { configuration ->
     implementation project(":data")
     lifeCycleConfiguration(configuration)
     vortexConfiguration(configuration)
     koinConfiguration(configuration)
+    databaseConfiguration(configuration)
 }
 
 private void vortexConfiguration(configuration) {

@@ -130,7 +130,6 @@ android {
 
 dependencies { configuration ->
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'de.hdodenhof:circleimageview:3.0.1'
     defaultTestingConfiguration(configuration)
     koinConfiguration(configuration)
     googlePlayServicesConfiguration(configuration)
@@ -141,7 +140,7 @@ dependencies { configuration ->
     applicationConfiguration(configuration)
     vortexConfiguration(configuration)
     daggerConfig(configuration)
-
+    databaseConfiguration(configuration)
     implementation project(":data")
     implementation project(":domain")
 }

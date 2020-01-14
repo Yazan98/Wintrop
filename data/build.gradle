@@ -1,4 +1,18 @@
-apply plugin: "${rootProject.ext.RealmPlugin}"
+/**
+ * Room Database Schema Location
+ */
+android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
+    }
+}
 
 dependencies { configuration ->
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -6,6 +20,7 @@ dependencies { configuration ->
     retrofitConfiguration(configuration)
     vortexConfiguration(configuration)
     lifeCycleConfiguration(configuration)
+    databaseConfiguration(configuration)
 }
 
 private void rxJavaConfiguration(configuration) {

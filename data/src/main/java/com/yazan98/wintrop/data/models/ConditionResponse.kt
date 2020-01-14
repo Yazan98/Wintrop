@@ -6,6 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ConditionResponse(
+    var cityName: String = "",
     @SerializedName("observation_time") var observationTime: String = "",
     @SerializedName("temp_C") var tempC: String = "",
     @SerializedName("temp_F") var tempFe: String = "",

@@ -10,7 +10,8 @@ data class Weather(
     @SerializedName("astronomy") var times: List<AstronomyResponse>,
     @SerializedName("maxtempF") var maxF: String = "",
     @SerializedName("mintempF") var minF: String = "",
-    @SerializedName("hourly") var hours: List<HourlyResponse>
+    @SerializedName("hourly") var hours: List<HourlyResponse>,
+    var cityName: String = ""
 ): Parcelable
 
 @Parcelize
