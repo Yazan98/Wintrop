@@ -121,7 +121,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
     private suspend fun loadResponse(response: WeatherResponse) {
         withContext(Dispatchers.Main) {
             /**
-             * Always this arrays return one object always index 0 is valid
+             * Always this arrays return one object always index 0 is valid and always the Array us just one item :D
              */
             MainTitle?.let { it.text = "${response.data.request[0].query}" }
             response.data.currentConditions[0].let { condition ->

@@ -24,7 +24,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${rootProject.ext.PluginsVersions.GradlePluginV}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.ext.PluginsVersions.KotlinPluginV}"
-        classpath "com.akaita.android:easylauncher:${rootProject.ext.PluginsVersions.EasyLauncherPluginV}"
+//        classpath "com.akaita.android:easylauncher:${rootProject.ext.PluginsVersions.EasyLauncherPluginV}"
         classpath "com.google.gms:google-services:${rootProject.ext.PluginsVersions.FirebasePluginV}"
         classpath "org.jmailen.gradle:kotlinter-gradle:${rootProject.ext.PluginsVersions.KtlintPluginV}"
         classpath "io.fabric.tools:gradle:${rootProject.ext.PluginsVersions.FabricPluginV}"
