@@ -61,17 +61,6 @@
             android:background="@drawable/bg_item_2"
             android:layout_marginTop="@dimen/_10sdp" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:id="@+id/ClearButton"
-            android:text="@string/clear_local"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/bg_item_2"
-            android:layout_marginTop="@dimen/_10sdp" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

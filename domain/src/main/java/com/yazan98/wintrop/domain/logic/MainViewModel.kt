@@ -11,6 +11,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel @Inject constructor() : VortexViewModel<MainState, MainAction>() {
 
@@ -27,7 +29,14 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState, MainActio
             if (getStateHandler().value == null || getStateHandler().value is MainState.ErrorState) {
                 when (newAction) {
                     is MainAction.GetWeatherInfoByCityName -> {
-                        println("Main Flow : Task Execute")
+                        println("Main Flow : Start Task First Time")
+                        executeWeatherTask(newAction)
+                    }
+                }
+            } else {
+                (newAction as MainAction.GetWeatherInfoByCityName).let {
+                    if (it.getStatus()) {
+                        println("Main Flow : Start Task With True ReLoad")
                         executeWeatherTask(newAction)
                     }
                 }
@@ -37,35 +46,22 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState, MainActio
 
     private suspend fun executeWeatherTask(newAction: MainAction.GetWeatherInfoByCityName) {
         withContext(Dispatchers.IO) {
-            DatabaseManager.getAllConditions().let {
-                if (it == null) {
-                    println("Main Flow : Null Result")
-                    newAction.get()?.let { it1 -> getCityByName(it1, true) }
-                } else {
-                    println("Main Flow : Get All Let : ${it}")
-                    it.isEmpty()?.let { result ->
-                        newAction.get()?.let {
-                            when (result) {
-                                true -> {
-                                    getCityByName(it, true)
-                                    println("Main Flow : Task Result True")
-                                }
-                                false -> {
-                                    fetchFromDatabase(it)
-                                    getCityByName(it, false)
-                                    println("Main Flow : Task Result False")
-                                }
-                            }
-                        }
+            newAction.get()?.let {
+                DatabaseManager.getAllConditions(it).let { result ->
+                    if (result.isNotEmpty()) {
+                        fetchFromDatabase(it)
+                        getCityByName(it, false)
+                    } else {
+                        getCityByName(it, true)
                     }
                 }
             }
         }
+
     }
 
     private suspend fun getCityByName(name: String, loading: Boolean) {
         withContext(Dispatchers.IO) {
-            println("Main Flow : Start Request")
             acceptLoadingState(loading)
             addRxRequest(
                 jordanRepository.getService().getWeatherStatusByCityName(query = name).subscribe(
@@ -73,7 +69,7 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState, MainActio
                         it.let {
                             GlobalScope.launch {
                                 handleSuccessState(MainState.SuccessResponse(it))
-                                insertIntoDatabase(it, name)
+                                insertIntoDatabase(it)
                             }
                         }
                     },
@@ -91,29 +87,55 @@ class MainViewModel @Inject constructor() : VortexViewModel<MainState, MainActio
         }
     }
 
-    private suspend fun insertIntoDatabase(response: WeatherResponse, name: String) {
+    private suspend fun insertIntoDatabase(response: WeatherResponse) {
         withContext(Dispatchers.IO) {
-            response.data.weather?.forEach {
-                it.cityName = name
+            val result: WeatherResponse = if(response.data.request[0].query.contains("Aqaba")) {
+                getResponseFromAqaba(response)
+            } else {
+                getNormalResponse(response)
             }
-
-            response.data.avarage[0].month.forEach {
-                it.cityName = name
-            }
-
-            response.data.currentConditions[0].cityName = name
+            DatabaseManager.insertIntoDatabase(result)
         }
-        DatabaseManager.insertIntoDatabase(response)
+    }
+
+    /**
+     * Here There is A Huge Problem With Aqaba Specially because Aqaba At Response Like This
+     * "request": [
+    {
+    "type": "City",
+    "query": "`Aqaba, Jordan"
+    }
+    ]
+    There is a comma Before Aqaba and im Passing Just Aqaba not with comma
+    For THis Reason im Splitting each Name To Get The City Name Without any comma
+     */
+    private suspend fun getResponseFromAqaba(response: WeatherResponse) = suspendCoroutine<WeatherResponse> {
+        response.data.weather?.forEach {
+            val name = response.data.request[0].query.split(",")[0]
+            it.cityName = name.substring(1, name.length)
+        }
+        response.data.avarage[0].month.forEach {
+            val name = response.data.request[0].query.split(",")[0]
+            it.cityName = name.substring(1, name.length)
+        }
+        val name = response.data.request[0].query.split(",")[0]
+        response.data.currentConditions[0].cityName = name.substring(1, name.length)
+        it.resume(response)
+    }
+
+    private suspend fun getNormalResponse(response: WeatherResponse) = suspendCoroutine<WeatherResponse> {
+        response.data.weather?.forEach {
+            it.cityName = response.data.request[0].query.split(",")[0]
+        }
+        response.data.avarage[0].month.forEach {
+            it.cityName = response.data.request[0].query.split(",")[0]
+        }
+        response.data.currentConditions[0].cityName = response.data.request[0].query.split(",")[0]
+        it.resume(response)
     }
 
     private suspend fun fetchFromDatabase(cityName: String) {
         withContext(Dispatchers.IO) {
-            println("Main Flow : Start From Database")
-            println(
-                "Main Flow : Result From Database : ${DatabaseManager.getResponseByCityName(
-                    cityName
-                )}"
-            )
             acceptNewState(MainState.SuccessResponse(DatabaseManager.getResponseByCityName(cityName)))
         }
     }

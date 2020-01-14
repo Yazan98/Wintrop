@@ -51,9 +51,9 @@ object DatabaseManager {
         }
     }
 
-    suspend fun getAllConditions(): List<ConditionEntity> {
+    suspend fun getAllConditions(cityName: String): List<ConditionEntity> {
         return withContext(Dispatchers.IO) {
-            getConditionDao().getAll()
+            getConditionDao().getEntityByCityName(cityName)
         }
     }
 
@@ -72,10 +72,10 @@ object DatabaseManager {
 
             WeatherResponse(
                 WeatherDetailsResponse(
-                    request = arrayListOf(condition?.cityName?.let { WeatherRequest("City" , it) }) as List<WeatherRequest>,
+                    request = arrayListOf(condition[0].cityName?.let { WeatherRequest("City" , it) }) as List<WeatherRequest>,
                     avarage = arrayListOf(AvarageResponse(months)),
                     weather = days,
-                    currentConditions = listOf(condition?.let { mapper.from(it) }) as List<ConditionResponse>
+                    currentConditions = listOf(condition?.let { mapper.from(it[0]) }) as List<ConditionResponse>
                 )
             )
         }

@@ -123,7 +123,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
             /**
              * Always this arrays return one object always index 0 is valid
              */
-            MainTitle?.let { it.text = "${response.data.request[0].type}, ${response.data.request[0].query}" }
+            MainTitle?.let { it.text = "${response.data.request[0].query}" }
             response.data.currentConditions[0].let { condition ->
                 DesTitleF?.let { it.text = "${condition.tempFe}${getString(R.string.present)}" }
                 CardDescription?.let { it.text = condition.description[0].value }
@@ -165,7 +165,6 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
         withContext(Dispatchers.Main) {
             activity?.let {
                 messageController.showSnackbar(it, message)
-                showErrorView(message)
             }
         }
     }
@@ -189,7 +188,7 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
 
     private suspend fun startNewNameAction(name: String) {
         withContext(Dispatchers.IO) {
-            getController().reduce(MainAction.GetWeatherInfoByCityName(name))
+            getController().reduce(MainAction.GetWeatherInfoByCityName(name, true))
         }
     }
 
@@ -198,21 +197,5 @@ class MainFragment @Inject constructor() : VortexFragment<MainState, MainAction,
         super.onDestroy()
     }
 
-    private suspend fun showErrorView(message: String) {
-        withContext(Dispatchers.Main) {
-            ErrorView?.showView()
-            ErrorView.findViewById<TextView>(R.id.ErrorMessage)?.let {
-                it.text = message
-            }
-
-            ErrorView.findViewById<FloatingActionButton>(R.id.ReloadError)?.apply {
-                this.setOnClickListener {
-                    GlobalScope.launch {
-                        getController().reduce(MainAction.GetWeatherInfoByCityName("Amman"))
-                    }
-                }
-            }
-        }
-    }
 
 }

@@ -26,13 +26,6 @@ class SettingsFragment @Inject constructor() : BottomSheetDialogFragment() {
             }
         }
 
-        ClearButton?.apply {
-            this.setOnClickListener {
-                listener?.onOptionChoose(3)
-                dismiss()
-            }
-        }
-
         AqabaButton?.apply {
             this.setOnClickListener {
                 listener?.onOptionChoose(2)

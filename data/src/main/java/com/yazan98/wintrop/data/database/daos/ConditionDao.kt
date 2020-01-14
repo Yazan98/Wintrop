@@ -24,6 +24,6 @@ interface ConditionDao : DaoExecutor<ConditionEntity> {
     override fun deleteEntityById(id: String)
 
     @Query("SELECT * FROM ConditionEntity WHERE city_name = :cityName")
-    fun getEntityByCityName(cityName: String): ConditionEntity
+    fun getEntityByCityName(cityName: String): List<ConditionEntity>
 
 }
