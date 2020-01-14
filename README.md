@@ -20,6 +20,7 @@ THe Second Screen is The Main Screen Store All Fragments At One Screen But at th
 9. Api Requests With Retrofit
 10. Reactive Operations With RxJava (At This Example Just Observable)
 11. Parcelable Entities
+12. Dependency Injection (Retrofit , Koin)
 
 ## Features Description
 1. Data Layer: This Layer has The Models for requests , Database, Object Mappers, etc...
